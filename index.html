@@ -14,13 +14,25 @@
 
         <div class="w3-row-padding">
             <div class="w3-half">
-                <label for="SalaryPerDay" class="w3-text-black w3-margin-top">เงินจ้างต่อวัน (บาท):</label>
-                <input type="number" id="SalaryPerDay" class="w3-input w3-border" placeholder="ป้อนเงินจ้างต่อวัน">
+                <label for="SalaryPerDay" class="w3-text-black w3-margin-top">ค่าจ้างต่อวัน (บาท):</label>
+                <input type="number" id="SalaryPerDay" class="w3-input w3-border" placeholder="ป้อนค่าจ้างต่อวัน">
             </div>
 
             <div class="w3-half">
                 <label for="Foodcostperday" class="w3-text-black w3-margin-top">ค่าอาหารต่อวัน (บาท):</label>
                 <input type="number" id="Foodcostperday" class="w3-input w3-border" placeholder="ป้อนค่าอาหารต่อวัน">
+            </div>
+        </div>
+        <div class="w3-row-padding">
+            <div class="w3-half">
+                <label for="OTcostperday" class="w3-text-black w3-margin-top">ค่าOTต่อวัน:</label>
+                <input type="number" id="OTcostperday" class="w3-input w3-border" placeholder="ป้อนค่าOTต่อวัน">
+            </div>
+
+            
+            <div class="w3-half">
+                <label for="HoursofOTwork" class="w3-text-black w3-margin-top">จำนวนวันที่ทำOT:</label>
+                <input type="number" id="HoursofOTwork" class="w3-input w3-border" placeholder="ป้อนวันที่ทำOTต่อเดือน">
             </div>
         </div>
 
@@ -40,6 +52,8 @@
         <p id="resultSalary" class="w3-text-dark w3-container w3-yellow"></p>
         <p id="resultFoodCost" class="w3-text-dark w3-container w3-yellow"></p>
         <p id="resultWorkingDays" class="w3-text-dark w3-container w3-yellow"></p>
+        <p id="resultOTcostperday" class="w3-text-dark w3-container w3-yellow"></p>
+        <p id="resultHoursofOTwork" class="w3-text-dark w3-container w3-yellow" ></p>
         <p id="resultVAT" class="w3-text-dark w3-container w3-yellow"></p>
         <p id="resultTotalSalary" class="w3-text-dark w3-container w3-yellow"></p>
     </div>
@@ -48,6 +62,8 @@
         document.getElementById('resultSalary').style.backgroundColor = 'transparent';
         document.getElementById('resultFoodCost').style.backgroundColor = 'transparent';
         document.getElementById('resultWorkingDays').style.backgroundColor = 'transparent';
+        document.getElementById('resultOTcostperday').style.backgroundColor = 'transparent';
+        document.getElementById('resultHoursofOTwork').style.backgroundColor = 'transparent';
         document.getElementById('resultVAT').style.backgroundColor = 'transparent';
         document.getElementById('resultTotalSalary').style.backgroundColor = 'transparent';
 
@@ -56,26 +72,37 @@
             var SalaryPerDay = parseFloat(document.getElementById('SalaryPerDay').value);
             var Foodcostperday = parseFloat(document.getElementById('Foodcostperday').value);
             var Dataofcomingtowork = parseFloat(document.getElementById('Dataofcomingtowork').value);
+            var OTcostperday = parseFloat(document.getElementById('OTcostperday').value);
+            var HoursofOTwork = parseFloat(document.getElementById('HoursofOTwork').value);
             var VAT = parseFloat(document.getElementById('VAT').value);
 
             // คำนวณเงินเดือนทั้งหมด
             var totalSalary = SalaryPerDay * Dataofcomingtowork;
-
+            //คำนวณค่าOTทั้งหมด
+            
             // แสดงผลลัพธ์
             var resultSalaryElement = document.getElementById('resultSalary');
             resultSalaryElement.innerHTML = 'รวมเงินเดือน: ' + totalSalary.toFixed(2);
 
+            //แสดงผลลัพธ์
 
             // คำนวณค่าอาหารต่อวัน
             var totalFoodCost = Foodcostperday * Dataofcomingtowork;
             var resultFoodCostElement = document.getElementById('resultFoodCost');
             resultFoodCostElement.innerHTML = 'รวมค่าอาหาร: ' + totalFoodCost.toFixed(2);
 
-
             // คำนวณจำนวนวันที่ทำงาน
             var resultWorkingDaysElement = document.getElementById('resultWorkingDays');
             resultWorkingDaysElement.innerHTML = 'จำนวนวันที่ทำงาน: ' + Dataofcomingtowork;
-    
+            
+            //คำนวณค่าOT
+            var totalOT = (OTcostperday/8) *1.5 * 2.5 * HoursofOTwork;
+            var resultOTcostperdayElement =document.getElementById('resultOTcostperday');
+            resultOTcostperdayElement.innerHTML = 'รวมเงินOT:' + totalOT.toFixed(2);
+            // ค่าอาหารOT
+            var totalFoodCostOT = (HoursofOTwork * 30);
+            var resultFoodCostOTElement = document.getElementById('resultHoursofOTwork');
+            resultFoodCostOTElement.innerHTML = 'รวมค่าอาหารOT: ' + totalFoodCostOT.toFixed(2);
 
             // คำนวณ VAT
             var vatAmount = totalSalary * (VAT / 100);
@@ -88,7 +115,7 @@
 
 
             // คำนวณรวมเงินที่จ่ายหลังหัก VAT และ ประกันสังคม
-            var totalAmountPaid = totalSalary + totalFoodCost - vatAmount;
+            var totalAmountPaid = totalSalary + totalFoodCost +totalOT +totalFoodCostOT - vatAmount;
             var resultTotalSalaryElement = document.getElementById('resultTotalSalary');
             resultTotalSalaryElement.innerHTML = 'เงินเดือนสุทธิ: ' + totalAmountPaid.toFixed(2);
 
